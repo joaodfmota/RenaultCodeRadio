@@ -32,17 +32,21 @@ export default class CodeInput extends Component{
 
   _submitCode = (value) => {
     if(this.state.securityCode.length === 4) {
-      this._securityCode = this.state.securityCode;
-      this.props.onPressNavigate();
+      this._saveCode();
     }
   }
 
   _handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       if(this.state.securityCode.length === 4) {
-        this.props.onPressNavigate();
+        this._saveCode();
       }
     }
+  }
+
+  _saveCode = () => {
+    this._securityCode = this.state.securityCode;
+    this.props.setCode(this.state.securityCode);
   }
 
   _onChangeSecurityCode = (newValue) => {

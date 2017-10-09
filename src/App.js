@@ -22,13 +22,15 @@ export default class App extends Component<{}> {
 
   constructor(props) {
     super(props);
+    this.state = {
+      securityCode: '',
+    };
     this._onNavigatorRef = this._onNavigatorRef.bind(this);
     this._renderScene = this._renderScene.bind(this);
     this._onPressNavigate = this._onPressNavigate.bind(this);
     this._onPressBack = this._onPressBack.bind(this);
-    this.state = {
-      securityCode: '',
-    };
+    this._setCode = this._setCode.bind(this);
+    this._getCode = this._getCode.bind(this, this.state.securityCode);
   }
 
   componentDidMount() {
@@ -56,9 +58,9 @@ export default class App extends Component<{}> {
   _renderScene(navigatorRoute) {
     switch (navigatorRoute.routeId) {
       case NavigationRouteId.Main:
-        return <CodeInput onPressNavigate={ this._onPressNavigate } />;
+        return <CodeInput onPressNavigate={ this._onPressNavigate } setCode={this._setCode} />;
       case NavigationRouteId.Result:
-        return <ResultArea onNavigateBack={ this._onPressBack } setCode={this.props._setCode}  />;
+        return <ResultArea onNavigateBack={ this._onPressBack } getCode={this._getCode} />;
       }
     return null;
   }
@@ -75,7 +77,13 @@ export default class App extends Component<{}> {
   }
 
   _setCode(code) {
-    this.setState({securityCode: code});     
+    this.setState({securityCode: code}, () => {
+      this._onPressNavigate();
+    });
+  }
+  
+  _getCode() {
+    return this.state.securityCode;
   }
   
   // http://rest.milangladis.com/
