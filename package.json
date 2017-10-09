@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "web": "webpack --config web/webpack.config.js",
+    "web-watch": "webpack --config web/webpack.config.js --progress --colors --watch",
     "test": "jest"
   },
   "dependencies": {
@@ -14,7 +14,8 @@
     "react-dom": "^16.0.0",
     "react-native": "0.49.1",
     "react-native-windows": "0.49.0-rc.0",
-    "reactxp": "^0.42.4"
+    "reactxp": "^0.42.4",
+    "reactxp-navigation": "^1.0.14"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

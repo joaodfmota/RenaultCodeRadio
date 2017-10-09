@@ -5,51 +5,82 @@
  */
 
 import React from 'react';
-import { View, Styles, Button, Text, Component, TextInput } from 'reactxp';
+import { View, Component, Styles, Types } from 'reactxp';
+
+import { Navigator } from 'reactxp-navigation';
+
+import CodeInput from './components/CodeInput';
+import ResultArea from './components/ResultArea';
+
+let NavigationRouteId = {
+  Main: "CodeInput",
+  Result: "ResultArea"
+};
 
 export default class App extends Component<{}> {
+  _navigator;
 
   constructor(props) {
     super(props);
+    this._onNavigatorRef = this._onNavigatorRef.bind(this);
+    this._renderScene = this._renderScene.bind(this);
+    this._onPressNavigate = this._onPressNavigate.bind(this);
+    this._onPressBack = this._onPressBack.bind(this);
     this.state = {
-        securityCode: '',
-        canSearch: false
+      securityCode: '',
     };
   }
 
-  // http://rest.milangladis.com/
-  // https://codepen.io/anon/pen/mepogj?editors=001
-  // https://github.com/JedWatson/classnames
+  componentDidMount() {
+    this._navigator.immediatelyResetRouteStack([{
+        routeId: NavigationRouteId.Main,
+        sceneConfigType: Types.NavigatorSceneConfigType.Fade       
+    }]);
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <div style={styles.codeRadioContainer}>
-          <TextInput 
-            placeholder="Enter your security code here..." 
-            style={styles.codeRadioSecurityCode} 
-            maxLength="4" 
-            onChangeText={ this._onChangeSecurityCode }
-            autoFocus={true}
-          />
-          <div style={styles.codeRadioSecuritySubmit}>
-            <div style={styles.codeRadioSecurityInputHelper}>press [ENTER] or</div>
-            Search
-          </div>
-        </div>
+        <Navigator
+          ref={ this._onNavigatorRef }
+          renderScene={ this._renderScene }
+        />
       </View>
     );
   }
 
-  _onChangeSecurityCode = (newValue) => {
-    if(newValue.length === 4) {
-      this.setState({securityCode: newValue});
-      this.setState({canSearch: true});
-    } else {
-      this.setState({securityCode: ''});
-      this.setState({canSearch: false});
-    }
+  _onNavigatorRef(navigator) {
+    this._navigator = navigator;
   }
+
+  _renderScene(navigatorRoute) {
+    switch (navigatorRoute.routeId) {
+      case NavigationRouteId.Main:
+        return <CodeInput onPressNavigate={ this._onPressNavigate } />;
+      case NavigationRouteId.Result:
+        return <ResultArea onNavigateBack={ this._onPressBack } setCode={this.props._setCode}  />;
+      }
+    return null;
+  }
+
+  _onPressNavigate() {
+    this._navigator.push({
+      routeId: NavigationRouteId.Result,
+      sceneConfigType: Types.NavigatorSceneConfigType.Fade
+    });
+  }
+
+  _onPressBack() {
+    this._navigator.pop();
+  }
+
+  _setCode(code) {
+    this.setState({securityCode: code});     
+  }
+  
+  // http://rest.milangladis.com/
+  // https://codepen.io/anon/pen/mepogj?editors=001
+  // https://github.com/JedWatson/classnames
 }
 
 const styles = {
@@ -57,62 +88,6 @@ const styles = {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-  }),
-  codeRadioContainer: Styles.createWebViewStyle({
-    position: 'relative',
-    zIndex: 1,
-    background: '#fff',
-    display: 'block',
-    borderRadius: '4px',
-    width: '100%',
-    maxWidth: '700px',
-    margin: 'auto'
-  }),
-  codeRadioSecurityCode: Styles.createTextInputStyle({
-    backgroundColor: 'transparent',
-    boxShadow: '0px 5px 30px rgba(0, 0, 0, 0.1)',    
-    color: '#686767',
-    border: 'none',
-    font: 'inherit',
-    fontSize: '14px',
-    height: '70px',
-    lineHeight: '70px',
-    marginLeft: 0,
-    outline: 'none',
-    overflow: 'hidden',
-    paddingLeft: '30px',
-    paddingRight: '175px',
-    transition: 'all 0.3s ease',
-    width: '100%',
-    whiteSpace: 'nowrap',
-  }),
-  codeRadioSecuritySubmit: Styles.createViewStyle({
-    position: 'absolute',
-    height: '50px',
-    padding: '0 30px',
-    top: '10px',
-    right: '10px',
-    color: '#fff',
-    fontSize: '12px',
-    letterSpacing: '0.5px',
-    lineHeight: 50,
-    textTransform: 'uppercase',
-    background: '#EDEDEF',
-    borderRadius: '2px',
-    cursor: 'pointer',
-    transition: 'all 0.3s ease',
-    pointerEvents: 'none',
-  }),
-  codeRadioSecurityInputHelper: Styles.createWebViewStyle({
-    opacity: 0,
-    position: 'absolute',
-    right: '100%',
-    color: '#A17BBC',
-    whiteSpace: 'nowrap',
-    fontSize: '10px',
-    marginRight: '5px',
-    pointerEvents: 'none',
-    transition: 'all 0.3s ease',
+    backgroundColor: '#262626',
   })
 };
