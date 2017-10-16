@@ -12,6 +12,10 @@ export default class CodeInput extends Component{
   render() {
     return (
       <div style={_styles.container} ref="codeInputArea">
+        <div style={_styles.error} ref="errorArea">
+          Ops, your code seens to be invalid. 
+          Click <strong style={_styles.errorMore} ref="errorMore">HERE</strong> to learn more.
+        </div>
         <TextInput 
           placeholder="Enter your security code here..." 
           style={_styles.inputCode} 
@@ -46,7 +50,12 @@ export default class CodeInput extends Component{
 
   _saveCode = () => {
     this._securityCode = this.state.securityCode;
-    this.props.setCode(this.state.securityCode);
+    if(this._securityCode.match(/[a-z]/i)) {
+      this.refs.errorArea.style.display = "none";
+      this.props.setCode(this.state.securityCode);
+    } else {
+      this.refs.errorArea.style.display = "block";
+    }
   }
 
   _onChangeSecurityCode = (newValue) => {
@@ -124,5 +133,15 @@ const _styles = {
     marginRight: '5px',
     pointerEvents: 'none',
     transition: 'all 0.3s ease',
+  }),
+  error: Styles.createViewStyle({
+    position: 'absolute',
+    top: '-30px',
+    display: 'none',
+    color: '#fff'
+  }),
+  errorMore: Styles.createViewStyle({
+    color: '#FFDE00',
+    cursor: 'pointer'
   })
 };
