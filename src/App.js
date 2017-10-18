@@ -2,19 +2,21 @@
  * Sample React Native App
  * https://github.com/facebook/react-native
  * @flow
+ * UA-108235469-1
  */
 
 import React from 'react';
 import { View, Component, Styles, Types } from 'reactxp';
-
 import { Navigator } from 'reactxp-navigation';
 
 import CodeInput from './components/CodeInput';
 import ResultArea from './components/ResultArea';
+import Help from './components/Help';
 
 let NavigationRouteId = {
   Main: "CodeInput",
-  Result: "ResultArea"
+  Result: "ResultArea",
+  Help: "Help"
 };
 
 export default class App extends Component<{}> {
@@ -31,6 +33,7 @@ export default class App extends Component<{}> {
     this._onPressBack = this._onPressBack.bind(this);
     this._setCode = this._setCode.bind(this);
     this._getCode = this._getCode.bind(this, this.state.securityCode);
+    this._getHelp = this._getHelp.bind(this);
   }
 
   componentDidMount() {
@@ -58,9 +61,11 @@ export default class App extends Component<{}> {
   _renderScene(navigatorRoute) {
     switch (navigatorRoute.routeId) {
       case NavigationRouteId.Main:
-        return <CodeInput onPressNavigate={ this._onPressNavigate } setCode={this._setCode} />;
+        return <CodeInput onPressNavigate={ this._onPressNavigate } setCode={this._setCode} getHelp={this._getHelp} />;
       case NavigationRouteId.Result:
         return <ResultArea onNavigateBack={ this._onPressBack } getCode={this._getCode} />;
+      case NavigationRouteId.Help:
+        return <Help onNavigateBack={ this._onPressBack } getCode={this._getCode} />;
       }
     return null;
   }
@@ -79,6 +84,13 @@ export default class App extends Component<{}> {
   _setCode(code) {
     this.setState({securityCode: code}, () => {
       this._onPressNavigate();
+    });
+  }
+
+  _getHelp() {
+    this._navigator.push({
+      routeId: NavigationRouteId.Help,
+      sceneConfigType: Types.NavigatorSceneConfigType.Fade
     });
   }
   

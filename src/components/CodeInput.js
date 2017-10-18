@@ -14,7 +14,7 @@ export default class CodeInput extends Component{
       <div style={_styles.container} ref="codeInputArea">
         <div style={_styles.error} ref="errorArea">
           Ops, your code seens to be invalid. 
-          Click <strong style={_styles.errorMore} ref="errorMore">HERE</strong> to learn more.
+          Click <Button onPress={this._getHelp} style={_styles.errorMore} ref="errorMore">HERE</Button> to learn more.
         </div>
         <TextInput 
           placeholder="Enter your security code here..." 
@@ -32,6 +32,10 @@ export default class CodeInput extends Component{
         </Button>
       </div>
     );
+  }
+
+  _getHelp = () => {
+    this.props.getHelp();
   }
 
   _submitCode = (value) => {
@@ -83,7 +87,7 @@ const _styles = {
     display: 'block',
     borderRadius: '4px',
     width: '100%',
-    maxWidth: '700px',
+    maxWidth: '500px',
     margin: 'auto',
   }),
   inputCode: Styles.createTextInputStyle({
@@ -142,6 +146,7 @@ const _styles = {
   }),
   errorMore: Styles.createViewStyle({
     color: '#FFDE00',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    display: 'static'
   })
 };
