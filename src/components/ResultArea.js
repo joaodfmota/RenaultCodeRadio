@@ -1,6 +1,8 @@
 import React from 'react';
 import { Component, TextInput, Styles, Button, Text, Platform } from 'reactxp';
 
+const require_method = require;
+
 export default class ResultArea extends Component {
   constructor(props) {
     super(props);
@@ -72,7 +74,7 @@ export default class ResultArea extends Component {
   _locateCode = (firstChar) => {
 
     _getFile = (file) => {
-      return require("../data/"+file.toLowerCase()+".json");
+      return require_method("../data/"+file.toLowerCase()+".json");
     }
 
     try {
